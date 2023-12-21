@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  hive: ^2.0.4 # Check for the latest version of Hive
+  hive: ^2.0.4
   hive_flutter: ^1.1.0
   path_provider: ^2.0.9
 

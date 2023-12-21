@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter_fitness_app/models/workout.dart';
 import 'add_workout.dart';
+import 'edit_workout.dart';
+
+//AI Helped generate code for moving to different screens/page routing & some logic & delete functionality/popup help
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -22,8 +26,57 @@ class _HomeScreenState extends State<HomeScreen> {
   void _loadWorkouts() {
     setState(() {
       workouts = box.values.toList();
-      print('Loaded workouts: ${workouts.length}');
     });
+  }
+
+  Widget _buildDeleteIcon(BuildContext context, int index) {
+    return IconButton(
+      icon: Icon(Icons.delete),
+      onPressed: () async {
+        final confirm = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Confirm"),
+            content: Text("Are you sure you want to delete this workout?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text("No"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text("Yes"),
+              ),
+            ],
+          ),
+        ) ?? false;
+
+        if (confirm) {
+          await box.deleteAt(index);
+          _loadWorkouts();
+        }
+      },
+    );
+  }
+
+  Widget _buildWorkoutList() {
+    return ListView.builder(
+      itemCount: workouts.length,
+      itemBuilder: (context, index) {
+        final workout = workouts[index];
+        return ListTile(
+          title: Text(workout.name),
+          subtitle: Text('Reps: ${workout.reps}, Weight: ${workout.weight} lbs'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EditWorkoutPage(workout: workout, index: index)),
+            ).then((_) => _loadWorkouts());
+          },
+          trailing: _buildDeleteIcon(context, index),
+        );
+      },
+    );
   }
 
   @override
@@ -32,16 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('Workout Tracker'),
       ),
-      body: ListView.builder(
-        itemCount: workouts.length,
-        itemBuilder: (context, index) {
-          final workout = workouts[index];
-          return ListTile(
-            title: Text(workout.name),
-            subtitle: Text('Reps: ${workout.reps}, Weight: ${workout.weight} lbs'),
-          );
-        },
-      ),
+      body: _buildWorkoutList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

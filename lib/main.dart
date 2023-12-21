@@ -6,7 +6,6 @@ import 'screens/home_screen.dart';
 
 
 void main() async {
-  // Ensuring all widgets are bound
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();

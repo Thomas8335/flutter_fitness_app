@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter_fitness_app/models/workout.dart';
 
+//AI helped generate formatting, _addWorkout & writeWorkout async function
+
 class AddWorkoutPage extends StatefulWidget {
   @override
   _AddWorkoutPageState createState() => _AddWorkoutPageState();

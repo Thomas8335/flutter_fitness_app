@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter_fitness_app/models/workout.dart';
 
+//AI helped generate updateWorkout async and saving function & some formatting & debugging state management issues
+
 class EditWorkoutPage extends StatefulWidget {
   final Workout workout;
   final int index;
@@ -27,9 +29,9 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
   }
 
   Future<void> updateWorkout(Workout updatedWorkout, int index) async {
-    var box = await Hive.openBox<Workout>('workouts');
+    var box = Hive.box<Workout>('workouts');
     box.putAt(index, updatedWorkout);
-    await box.close();
+
   }
 
   void _saveUpdatedWorkout() async {
